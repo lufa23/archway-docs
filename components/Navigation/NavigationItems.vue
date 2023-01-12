@@ -6,12 +6,18 @@
   const props = defineProps({
     selectedSection: { type: Object as PropType<Section>, required: true },
   });
+  const route = useRoute();
 
   const { navigation } = await useNavigation(props.selectedSection);
+  const selectedSection = ref(route.path);
+
+  const switchSection = (section: Section) => {
+    selectedSection.value = section;
+  };
 </script>
 
 <template>
-  <div class="space-y-2">
-    <NavigationItem :item="item" v-for="item in navigation" />
+  <div class="space-y-4">
+    <NavigationItem :item="item" v-for="item in navigation" @switchSection="switchSection" :selectedSection="selectedSection" />
   </div>
 </template>
