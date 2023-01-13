@@ -28,13 +28,13 @@
 
   isChildExist(props.item.children);
 
-  const isShowing = ref(props.selectedSection === props.item.path);
+  const shouldOpen = ref(props.selectedSection === props.item.path || doesSelectedItemChildExist);
 </script>
 
 <template>
   <div>
-    <div v-if="item.children.length" class="flex items-center cursor-pointer" @click="isShowing = !isShowing">
-      <p class="mr-2" v-if="!isShowing"><ChevronRightIcon class="w-4 h-4" /></p>
+    <div v-if="item.children.length" class="flex items-center cursor-pointer" @click="shouldOpen = !shouldOpen">
+      <p class="mr-2" v-if="!shouldOpen"><ChevronRightIcon class="w-4 h-4" /></p>
       <p class="mr-2" v-else><ChevronDownIcon class="w-4 h-4" /></p>
       <p>{{ item.title }}</p>
     </div>
@@ -44,11 +44,11 @@
       >
     </div>
     <div class="pl-3 mt-2">
-      <div class="pl-6 pt-2 border-l border-gray-400" v-if="item.children.length" v-show="isShowing">
+      <div class="pl-6 pt-2 border-l border-gray-400" v-if="item.children.length" v-show="shouldOpen">
         <NavigationItem
           :item="child"
           v-for="child in item.children"
-          @click="emit('switchSection', child.path)"
+          @switchSection="path => emit('switchSection', path)"
           :selectedSection="selectedSection"
         />
       </div>
